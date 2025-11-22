@@ -81,3 +81,4 @@ pids
 .out
 .storybook-out
 storybook-static/
+node_modules/
