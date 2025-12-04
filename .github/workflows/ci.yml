@@ -1,6 +1,6 @@
 # GitHub Actions Workflow
 # Generated with Pipeflow - https://pipeflow.app
-# Language(s): nodejs
+# Language(s): nextjs
 
 name: CI/CD Pipeline
 
@@ -11,13 +11,11 @@ on:
     branches: [ main ]
 
 env:
-  NODE_VERSION: "20-alpine"
+  NODE_VERSION: "20"
 
 jobs:
-  build_node.js:
+  build:
     runs-on: ubuntu-latest
-    env:
-      NODE_VERSION: "20-alpine"
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -25,7 +23,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: '20'
           cache: 'npm'
 
       - name: Cache dependencies
@@ -33,26 +31,24 @@ jobs:
         with:
           path: |
             node_modules/
-            .npm/
-          key: ${{ runner.os }}-nodejs-build-${{ hashFiles('**/package-lock.json', '**/pnpm-lock.yaml', '**/yarn.lock') }}
+          key: ${{ runner.os }}-nextjs-build-${{ hashFiles('**/package-lock.json', '**/pnpm-lock.yaml', '**/yarn.lock') }}
 
       - name: Setup
         run: |
           node --version
           npm --version
 
-      - name: Build Node.js
+      - name: Build
         run: |
-          npm ci --cache .npm --prefer-offline
+          npm ci
           npm run build
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: build_node.js-artifacts
+          name: build-artifacts
           path: |
             dist/
             build/
-            .next/
           retention-days: 7
 
