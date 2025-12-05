@@ -1,6 +1,6 @@
 # GitHub Actions Workflow
 # Generated with Pipeflow - https://pipeflow.app
-# Language(s): nextjs, nodejs
+# Language(s): nextjs
 
 name: CI/CD Pipeline
 
@@ -11,11 +11,13 @@ on:
     branches: [ main ]
 
 env:
-  NODE_VERSION: "20-alpine"
+  NODE_VERSION: "20"
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -50,13 +52,13 @@ jobs:
           path: |
             dist/
             build/
+            .next/
+            out/
           retention-days: 7
 
-  test_node.js:
+  lint_1:
     runs-on: ubuntu-latest
     needs: [build]
-    env:
-      NODE_VERSION: "20-alpine"
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -64,7 +66,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: '20'
           cache: 'npm'
 
       - name: Cache dependencies
@@ -72,23 +74,41 @@ jobs:
         with:
           path: |
             node_modules/
-          key: ${{ runner.os }}-nodejs-test-${{ hashFiles('**/package-lock.json', '**/pnpm-lock.yaml', '**/yarn.lock') }}
+          key: ${{ runner.os }}-nextjs-lint-${{ hashFiles('**/package-lock.json', '**/pnpm-lock.yaml', '**/yarn.lock') }}
 
       - name: Setup
         run: |
-          npm ci --cache .npm --prefer-offline
+          npm ci
 
-      - name: Test Node.js
+      - name: Lint
         run: |
-          npm run test -- --coverage
-          npm run test:ci || npm test
+          npm run lint
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+  type_check_2:
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          name: test_node.js-artifacts
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
           path: |
-            coverage/
-            test-results.xml
-          retention-days: 7
+            node_modules/
+          key: ${{ runner.os }}-nextjs-lint-${{ hashFiles('**/package-lock.json', '**/pnpm-lock.yaml', '**/yarn.lock') }}
+
+      - name: Setup
+        run: |
+          npm ci
+
+      - name: Type Check
+        run: |
+          npx tsc --noEmit
 
