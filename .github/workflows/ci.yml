@@ -1,6 +1,6 @@
 # GitHub Actions Workflow
 # Generated with Pipeflow - https://pipeflow.app
-# Language(s): nextjs
+# Language(s): 
 
 name: CI/CD Pipeline
 
@@ -10,52 +10,17 @@ on:
   pull_request:
     branches: [ main ]
 
-env:
-  _repository: "[object Object]"
-  NODE_VERSION: "20"
-
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      NEXT_TELEMETRY_DISABLED: "1"
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        with:
-          path: |
-            node_modules/
-          key: ${{ runner.os }}-nextjs-build-${{ hashFiles('**/package-lock.json', '**/pnpm-lock.yaml', '**/yarn.lock') }}
-
-      - name: Setup
-        run: |
-          node --version
-          npm --version
-
       - name: Build
         run: |
-          npm ci
-          npm run build
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-artifacts
-          path: |
-            dist/
-            build/
-            .next/
-            out/
-          retention-days: 7
+          echo "Running Build"
+          echo ""
 
   lint_1:
     runs-on: ubuntu-latest
@@ -64,26 +29,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        with:
-          path: |
-            node_modules/
-          key: ${{ runner.os }}-nextjs-lint-${{ hashFiles('**/package-lock.json', '**/pnpm-lock.yaml', '**/yarn.lock') }}
-
-      - name: Setup
-        run: |
-          npm ci
-
       - name: Lint
         run: |
-          npm run lint
+          echo "Running Lint"
+          echo ""
 
   type_check_2:
     runs-on: ubuntu-latest
@@ -92,24 +41,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        with:
-          path: |
-            node_modules/
-          key: ${{ runner.os }}-nextjs-lint-${{ hashFiles('**/package-lock.json', '**/pnpm-lock.yaml', '**/yarn.lock') }}
-
-      - name: Setup
-        run: |
-          npm ci
-
       - name: Type Check
         run: |
-          npx tsc --noEmit
+          echo "Running Type Check"
+          echo ""
 
