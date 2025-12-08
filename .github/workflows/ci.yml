@@ -11,38 +11,26 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  build_next.js_(npm):
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Build
+      - name: Build Next.js (npm)
         run: |
-          echo "Running Build"
+          echo "Running Build Next.js (npm)"
           echo ""
 
-  lint_1:
+  lint_(npm):
     runs-on: ubuntu-latest
-    needs: [build]
+    needs: [build_next.js_(npm)]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Lint
+      - name: Lint (npm)
         run: |
-          echo "Running Lint"
-          echo ""
-
-  type_check_2:
-    runs-on: ubuntu-latest
-    needs: [build]
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Type Check
-        run: |
-          echo "Running Type Check"
+          echo "Running Lint (npm)"
           echo ""
 
