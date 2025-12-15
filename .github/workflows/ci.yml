@@ -16,7 +16,7 @@ env:
   NEXT_TELEMETRY_DISABLED: "1"
 
 jobs:
-  buildnext.js:
+  build_next_js:
     runs-on: ubuntu-latest
     env:
       NODE_VERSION: "20"
@@ -56,7 +56,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: build_next.js-artifacts
+          name: build_next_js-artifacts
           path: |
             .next/
             out/
