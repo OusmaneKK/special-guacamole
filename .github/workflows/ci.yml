@@ -16,7 +16,7 @@ env:
   NEXT_TELEMETRY_DISABLED: "1"
 
 jobs:
-  build_next.js:
+  buildnext.js:
     runs-on: ubuntu-latest
     env:
       NODE_VERSION: "20"
